@@ -1,451 +1,576 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>SFS Audit Sampling Tool</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SFS Internal Audit Sampling Tool</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --square-blue: #006AFF;
-            --square-dark-blue: #0053C8;
-            --square-light-blue: #E6F0FF;
-            --cash-green: #00D54B;
-            --cash-dark-green: #00B341;
-            --square-text: #2F3033;
-            --square-border: #D8D8D8;
-            --square-background: #F7F7F7;
-            --square-hover: #F2F2F2;
-            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
-            --shadow-md: 0 2px 4px rgba(0,0,0,0.05);
-            --shadow-lg: 0 4px 6px rgba(0,0,0,0.05);
-            --radius-sm: 6px;
-            --radius-md: 8px;
-            --radius-lg: 12px;
+            --block-black: #000000;
+            --block-white: #FFFFFF;
+            --block-gray-50: #FAFAFA;
+            --block-gray-100: #F5F5F5;
+            --block-gray-200: #EEEEEE;
+            --block-gray-300: #E0E0E0;
+            --block-gray-600: #757575;
+            --block-gray-900: #212121;
         }
 
         body {
-            background-color: var(--square-background);
-            color: var(--square-text);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
             -webkit-font-smoothing: antialiased;
+            background: var(--block-white);
+            color: var(--block-black);
             line-height: 1.5;
+            font-size: 16px;
+            padding-top: 2rem;
         }
 
-        .container {
-            max-width: 1200px;
-            padding: 2rem;
+        .hero-section {
+            padding: 0 0 2rem 0;
         }
 
-        h1 {
-            font-size: 2.5rem;
+        .hero-title {
+            font-size: 3.5rem;
             font-weight: 700;
-            color: var(--square-text);
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            margin-bottom: 1rem;
+            text-align: center;
         }
 
-        .card {
-            background: white;
-            border: 1px solid var(--square-border);
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-sm);
-            transition: all 0.2s ease;
+        .hero-description {
+            font-size: 1rem;
+            color: var(--block-gray-600);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .quick-start-container {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
             margin-bottom: 1.5rem;
         }
 
-        .card:hover {
-            box-shadow: var(--shadow-md);
+        .btn, 
+        .form-control, 
+        .tool-section, 
+        .upload-zone, 
+        .methodology-info, 
+        .sample-summary, 
+        .quick-start-step,
+        .quick-start-modal {
+            border-radius: 0;
         }
 
-        .card-header {
-            background: white;
-            border-bottom: 1px solid var(--square-border);
-            padding: 1.25rem;
-        }
-
-        .step-number {
-            background: var(--square-blue);
-            color: white;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 0.75rem;
-            font-weight: 600;
-        }
-
-        .form-select, .form-control {
-            max-width: 400px;
-            margin: 0 auto;
-            border: 1px solid var(--square-border);
-            border-radius: var(--radius-md);
-            padding: 0.75rem 1rem;
+        .tool-section {
+            padding: 1.5rem;
+            border: 1px solid var(--block-gray-200);
             transition: all 0.2s ease;
+            height: 100%;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
         }
 
-        .form-select:focus, .form-control:focus {
-            border-color: var(--square-blue);
-            box-shadow: 0 0 0 3px var(--square-light-blue);
+        .tool-section:hover {
+            border-color: var(--block-black);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .form-control {
+            border: 1px solid var(--block-gray-300);
+            padding: 0.75rem;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            width: 100%;
+            background: var(--block-white);
+        }
+
+        .form-control:focus {
+            border-color: var(--block-black);
             outline: none;
+            box-shadow: none;
+        }
+
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            display: block;
         }
 
         .btn {
             padding: 0.75rem 1.5rem;
-            border-radius: var(--radius-md);
             font-weight: 500;
             transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
         }
 
         .btn-primary {
-            background: var(--square-blue);
+            background: var(--block-black);
+            color: var(--block-white);
             border: none;
-            color: white;
         }
 
         .btn-primary:hover {
-            background: var(--square-dark-blue);
-            transform: translateY(-1px);
+            background: var(--block-gray-900);
         }
 
-        .btn-outline-dark {
-            border: 1px solid var(--square-text);
-            color: var(--square-text);
-            background: white;
+        .btn-outline {
+            background: var(--block-white);
+            color: var(--block-black);
+            border: 1px solid var(--block-gray-300);
         }
 
-        .btn-outline-dark:hover {
-            background: var(--square-hover);
+        .btn-outline:hover {
+            border-color: var(--block-black);
         }
 
-        .alert {
-            border-radius: var(--radius-md);
-            border: 1px solid var(--square-border);
-        }
-
-        .alert-primary, .alert-info {
-            background: var(--square-light-blue);
-            border-color: var(--square-blue);
-            color: var(--square-blue);
-        }
-
-        .upload-area {
-            border: 2px dashed var(--square-border);
-            border-radius: var(--radius-md);
-            padding: 2rem;
+        /* Updated upload-zone to match methodology-info style */
+        .upload-zone {
+            background: var(--block-gray-50);
+            border: 1px solid var(--block-gray-200);
+            padding: 1.5rem;
             text-align: center;
             cursor: pointer;
             transition: all 0.2s ease;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 250px;
         }
 
-        .upload-area:hover {
-            border-color: var(--square-blue);
-            background: var(--square-light-blue);
+        .upload-zone:hover {
+            border-color: var(--block-black);
         }
 
-        .table {
-            background: white;
-            border-radius: var(--radius-md);
-            overflow: hidden;
+        /* Added new class for centered buttons */
+        .generate-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
         }
 
-        .table th {
-            background: var(--square-background);
-            border-bottom: 2px solid var(--square-border);
-            font-weight: 600;
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
         }
 
-        .table td {
-            border-bottom: 1px solid var(--square-border);
+        .results-table th {
+            text-align: left;
+            padding: 0.75rem;
+            border-bottom: 2px solid var(--block-black);
+            font-weight: 500;
+        }
+
+        .results-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--block-gray-200);
         }
 
         .modal-backdrop {
-            background: rgba(0, 0, 0, 0.4);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
             backdrop-filter: blur(4px);
+            z-index: 1000;
+            display: none;
         }
 
         .quick-start-modal {
-            background: white;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .quick-start-header {
-            background: var(--square-blue);
-            color: white;
-            padding: 1.5rem;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--block-white);
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            z-index: 1001;
+            display: none;
         }
 
         .quick-start-step {
-            padding: 1rem;
-            border-radius: var(--radius-md);
-            transition: all 0.2s ease;
-            margin-bottom: 1rem;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border: 1px solid var(--block-gray-200);
+            transition: all 0.2s ease;
         }
 
         .quick-start-step:hover {
-            background: var(--square-light-blue);
-            transform: translateX(4px);
+            border-color: var(--block-black);
         }
 
         .step-icon {
-            background: white;
-            color: var(--square-blue);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            background: var(--block-black);
+            color: var(--block-white);
             display: flex;
             align-items: center;
             justify-content: center;
             margin-right: 1rem;
-            box-shadow: var(--shadow-sm);
+            flex-shrink: 0;
+            font-weight: 500;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--block-gray-600);
+            padding: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            transition: all 0.2s ease;
+        }
+
+        .close-button:hover {
+            background: var(--block-gray-100);
+            color: var(--block-black);
         }
 
         .methodology-info {
-            color: #666;
-            font-size: 0.9rem;
-            margin-top: 0.5rem;
+            background: var(--block-gray-50);
+            padding: 1.5rem;
+            border: 1px solid var(--block-gray-200);
+            margin-bottom: 1.5rem;
         }
 
-        .form-label {
-            color: var(--square-text);
-            font-weight: 500;
+        .sample-summary {
+            background: var(--block-gray-50);
+            padding: 1.5rem;
+            border: 1px solid var(--block-gray-200);
+            margin-bottom: 1.5rem;
+        }
+
+        .sample-summary h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--block-gray-900);
+        }
+
+        .sample-summary p {
             margin-bottom: 0.5rem;
+            color: var(--block-gray-600);
         }
 
-        .text-muted {
-            color: var(--square-text) !important;
-            opacity: 0.6;
+        .sample-summary strong {
+            color: var(--block-black);
+        }
+
+        #customSampleSize {
+            margin-top: 1rem;
+        }
+
+        #fileInfo {
+            margin-top: 1rem;
+        }
+
+        .section-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
     </style>
 </head>
 <body>
-    <!-- Modal Backdrop -->
-    <div id="modalBackdrop" class="modal-backdrop" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999;"></div>
-
     <!-- Quick Start Modal -->
-    <div id="quickStartModal" class="quick-start-modal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 500px; z-index: 1000;">
-        <div class="quick-start-header">
-            <h4 class="m-0">Quick Start Guide</h4>
+    <div class="modal-backdrop" id="modalBackdrop"></div>
+    <div class="quick-start-modal" id="quickStartModal">
+        <button class="close-button" onclick="closeQuickStart()">&times;</button>
+        <h2 class="section-title mb-4">Quick Start Guide</h2>
+        
+        <div class="quick-start-step">
+            <div class="step-icon">1</div>
+            <div>
+                <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.5rem;">Set Control Frequency</h3>
+                <p style="color: var(--block-gray-600); margin: 0;">Choose how often the control is performed to determine the required sample size.</p>
+            </div>
         </div>
-        <div class="p-4">
-            <div class="quick-start-step">
-                <div class="step-icon">
-                    <i class="fas fa-sliders-h"></i>
-                </div>
-                <div>
-                    <h6 class="mb-1">Set Control Frequency</h6>
-                    <p class="mb-0 text-muted">Choose the frequency of control execution</p>
-                </div>
+
+        <div class="quick-start-step">
+            <div class="step-icon">2</div>
+            <div>
+                <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.5rem;">Upload Population</h3>
+                <p style="color: var(--block-gray-600); margin: 0;">Import your Excel or CSV file containing the population data.</p>
             </div>
-            <div class="quick-start-step">
-                <div class="step-icon">
-                    <i class="fas fa-file-upload"></i>
-                </div>
-                <div>
-                    <h6 class="mb-1">Upload Population</h6>
-                    <p class="mb-0 text-muted">Import your data file (Excel or CSV)</p>
-                </div>
+        </div>
+
+        <div class="quick-start-step">
+            <div class="step-icon">3</div>
+            <div>
+                <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.5rem;">Configure Sampling</h3>
+                <p style="color: var(--block-gray-600); margin: 0;">Review the sampling methodology and set replacement sample preferences.</p>
             </div>
-            <div class="quick-start-step">
-                <div class="step-icon">
-                    <i class="fas fa-random"></i>
-                </div>
-                <div>
-                    <h6 class="mb-1">Configure Sampling</h6>
-                    <p class="mb-0 text-muted">Set up your sampling methodology</p>
-                </div>
-            </div>
-            <div class="quick-start-step">
-                <div class="step-icon">
-                    <i class="fas fa-check-circle"></i>
-                </div>
-                <div>
-                    <h6 class="mb-1">Generate & Export</h6>
-                    <p class="mb-0 text-muted">Create and download your sample</p>
-                </div>
+        </div>
+
+        <div class="quick-start-step">
+            <div class="step-icon">4</div>
+            <div>
+                <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.5rem;">Generate & Export</h3>
+                <p style="color: var(--block-gray-600); margin: 0;">Generate your sample and export the results to Excel.</p>
             </div>
         </div>
     </div>
 
-    <div class="container">
-        <div class="text-center mb-5">
-            <h1 class="mb-3">SFS Internal Audit Sampling Tool</h1>
-            <p class="text-muted mb-4">A tool designed to simplify the audit testing process with automated sample selection and documentation</p>
-            <button class="btn btn-primary" onclick="showQuickStart()">
-                <i class="fas fa-play-circle me-2"></i>Quick Start Guide
-            </button>
-        </div>
-
-        <!-- Control Information -->
-        <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <div class="d-flex align-items-center">
-                    <span class="step-number">1</span>
-                    <h5 class="mb-0">Control Information</h5>
-                </div>
-                <button class="btn btn-outline-dark btn-sm" onclick="resetTool()">
-                    <i class="fas fa-redo-alt me-2"></i>Reset
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <h1 class="hero-title">SFS Internal Audit Sampling Tool</h1>
+            <p class="hero-description">
+                A tool designed to simplify the audit testing process with automated sample selection and documentation
+            </p>
+            <div class="quick-start-container">
+                <button class="btn btn-primary" onclick="showQuickStart()">
+                    <i class="fas fa-play-circle me-2"></i>Quick Start Guide
                 </button>
             </div>
-            <div class="card-body">
-                <div class="text-center">
-                    <label class="form-label">Control Frequency</label>
-                    <select class="form-select mb-3" id="controlFrequency" onchange="updateRequiredSamples()">
-                        <option value="annual">Annual (1 population)</option>
-                        <option value="quarterly">Quarterly (4 population)</option>
-                        <option value="monthly">Monthly (12 population)</option>
-                        <option value="weekly">Weekly (52 population)</option>
-                        <option value="daily">Daily (365 population)</option>
-                        <option value="multiple">Multiple times per day (365+ population)</option>
-                        <option value="custom">Custom</option>
-                    </select>
-                    <input type="number" class="form-control mb-3" id="customSampleSize" value="1" min="1" style="display: none;" oninput="updateRequiredSamples()">
-                    <div id="requiredSamplesInfo" class="alert alert-primary">
-                        Required sample size: <span id="requiredSamplesCount">1</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+        </section>
 
-        <!-- Population Data -->
-        <div class="card">
-            <div class="card-header d-flex align-items-center">
-                <span class="step-number">2</span>
-                <h5 class="mb-0">Population Data</h5>
-            </div>
-            <div class="card-body">
-                <div id="fileInfo" style="display: none;" class="alert alert-primary mb-3">
-                    <i class="fas fa-file-excel me-2"></i>
-                    <span id="fileName"></span>
+        <!-- Top Row -->
+        <div class="tool-grid">
+            <!-- Configuration Section -->
+            <div class="tool-section">
+                <div class="d-flex justify-content-between align-items-start mb-4">
+                    <h2 class="section-title mb-0">1. Configure Sample</h2>
+                    <button class="btn btn-outline btn-sm" onclick="resetTool()">
+                        <i class="fas fa-redo-alt me-2"></i>Reset
+                    </button>
                 </div>
-                <div class="upload-area" onclick="document.getElementById('excelFile').click()">
-                    <i class="fas fa-cloud-upload-alt fa-3x mb-3" style="color: var(--square-blue);"></i>
-                    <h5>Drop your file here or click to browse</h5>
-                    <p class="text-muted mb-0">Supports Excel (.xlsx, .xls) and CSV files</p>
-                </div>
-                <input type="file" id="excelFile" accept=".xlsx,.xls,.csv" style="display: none;">
-                <div id="populationInfo" class="alert alert-primary mt-3" style="display: none;"></div>
-            </div>
-        </div>
-
-        <!-- Sampling Methodology -->
-        <div class="card">
-            <div class="card-header d-flex align-items-center">
-                <span class="step-number">3</span>
-                <h5 class="mb-0">Sampling Methodology</h5>
-            </div>
-            <div class="card-body">
-                <div class="text-center">
+                <div class="section-content">
                     <div class="mb-4">
-                        <label class="form-label">Selection Method</label>
-                        <select class="form-select" id="selectionMethod" onchange="updateMethodologyInfo()">
-                            <option value="simple" data-info="Randomly selects samples from the entire population with equal probability">Simple Random Sample (Preferred)</option>
-                            <option value="stratified" data-info="Divides population into subgroups and samples from each group">Stratified Sample</option>
-                            <option value="cluster" data-info="Divides population into clusters, selects clusters, then samples within them">Clustered Sample</option>
+                        <label class="form-label">Control Frequency</label>
+                        <select class="form-control" id="frequency" onchange="updateSampleCounts()">
+                            <option value="annual">Annual (1 population)</option>
+                            <option value="quarterly">Quarterly (4 population)</option>
+                            <option value="monthly">Monthly (12 population)</option>
+                            <option value="weekly">Weekly (52 population)</option>
+                            <option value="daily">Daily (365 population)</option>
+                            <option value="multiple">Multiple times per day (365+ population)</option>
+                            <option value="custom">Custom</option>
                         </select>
-                        <div class="methodology-info" id="methodologyInfo"></div>
+                        <input type="number" class="form-control" id="customSampleSize" value="1" min="1" style="display: none;" oninput="updateSampleCounts()">
+                    </div>
+                    <p class="mt-4" style="color: var(--block-gray-600);">Required sample size: <strong style="color: var(--block-black);" id="sampleSize">25</strong> items</p>
+                </div>
+            </div>
+
+            <!-- Upload Section -->
+            <div class="tool-section">
+                <h2 class="section-title">2. Upload Population</h2>
+                <div class="section-content">
+                    <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+                        <input type="file" id="fileInput" hidden accept=".xlsx,.xls,.csv">
+                        <p style="font-size: 1.25rem; margin-bottom: 0.5rem;">Drop your file here</p>
+                        <p style="color: var(--block-gray-600); margin: 0;">or click to browse</p>
+                    </div>
+                    <div id="fileInfo" style="display: none;">
+                        <p style="color: var(--block-gray-600); margin-bottom: 0.5rem;">
+                            <strong style="color: var(--block-black);">File:</strong> 
+                            <span id="fileName">No file selected</span>
+                        </p>
+                        <p style="color: var(--block-gray-600); margin: 0;">
+                            <strong style="color: var(--block-black);">Items:</strong> 
+                            <span id="itemCount">0</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Row -->
+        <div class="tool-grid">
+            <!-- Sampling Methodology Section -->
+            <div class="tool-section">
+                <h2 class="section-title">3. Sampling Methodology</h2>
+                <div class="section-content">
+                    <div class="methodology-info">
+                        <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem;">Simple Random Sample</h3>
+                        <p style="color: var(--block-gray-600); margin: 0;">
+                            This methodology ensures each item in your population has an equal probability of being selected, 
+                            providing an unbiased representation of the entire population for audit testing.
+                        </p>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Replacement Samples</label>
-                        <select class="form-select" id="replacementSamples" onchange="toggleReplacementInput()">
-                            <option value="no">No</option>
-                            <option value="yes">Yes</option>
-                        </select>
-                        <div id="replacementSamplesInput" style="display: none;" class="mt-3">
-                            <label class="form-label">Number of Replacement Samples</label>
-                            <input type="number" class="form-control" id="replacementSampleSize" min="1" value="1" oninput="updateSampleSummary()">
+                    <div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="mb-4">
+                                    <label class="form-label">Replacement Samples</label>
+                                    <select class="form-control" id="replacementSamples" onchange="updateSampleCounts()">
+                                        <option value="no">No</option>
+                                        <option value="yes">Yes</option>
+                                    </select>
+                                </div>
+
+                                <div id="replacementCount" style="display: none;">
+                                    <div class="mb-4">
+                                        <label class="form-label">Number of Replacement Samples</label>
+                                        <input type="number" class="form-control" id="replacementSize" value="1" min="1" onchange="updateSampleCounts()">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                </div>
+            </div>
 
-                    <div id="sampleSummary" class="alert alert-primary" style="display: none;">
-                        Total samples to be selected: <span id="totalSamplesCount">0</span>
-                        <br>
-                        <small>(Required: <span id="summaryRequiredCount">0</span>, Replacement: <span id="summaryReplacementCount">0</span>)</small>
+            <!-- Generate Section -->
+            <div class="tool-section">
+                <h2 class="section-title">4. Generate Sample</h2>
+                <div class="section-content">
+                    <div class="sample-summary" id="sampleSummary">
+                        <h4>Sample Size Summary</h4>
+                        <p>Required Samples: <strong id="requiredCount">25</strong></p>
+                        <p>Replacement Samples: <strong id="replacementTotal">0</strong></p>
+                        <p style="margin-bottom: 0;">Total Samples: <strong id="totalCount">25</strong></p>
                     </div>
-                </div>
-            </div>
-        </div>
 
-        <!-- Generate Sample -->
-        <div class="card">
-            <div class="card-header d-flex align-items-center">
-                <span class="step-number">4</span>
-                <h5 class="mb-0">Generate Sample</h5>
-            </div>
-            <div class="card-body">
-                <div class="text-center mb-4">
-                    <button class="btn btn-primary me-2" onclick="generateSample()">
-                        <i class="fas fa-random me-2"></i>Generate Sample
-                    </button>
-                    <button class="btn btn-success" onclick="exportToExcel()">
-                        <i class="fas fa-file-excel me-2"></i>Export to Excel
-                    </button>
-                </div>
+                    <!-- Updated to use generate-buttons class -->
+                    <div class="generate-buttons">
+                        <button class="btn btn-primary" onclick="generateSample()">Generate Sample</button>
+                        <button class="btn btn-outline" onclick="exportResults()">Export Results</button>
+                    </div>
 
-                <div id="sampleResults" style="display: none;">
-                    <h6 class="mb-3">Required Samples</h6>
-                    <div class="table-responsive mb-4">
-                        <table class="table" id="requiredSamplesTable">
+                    <div id="results" style="display: none;">
+                        <table class="results-table">
                             <thead>
-                                <tr id="requiredSamplesHeader"></tr>
+                                <tr id="headerRow"></tr>
                             </thead>
-                            <tbody id="requiredSamplesBody"></tbody>
+                            <tbody id="resultBody"></tbody>
                         </table>
                     </div>
-
-                    <div id="replacementSamplesSection" style="display: none;">
-                        <h6 class="mb-3">Replacement Samples</h6>
-                        <div class="table-responsive">
-                            <table class="table" id="replacementSamplesTable">
-                                <thead>
-                                    <tr id="replacementSamplesHeader"></tr>
-                                </thead>
-                                <tbody id="replacementSamplesBody"></tbody>
-                            </table>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
     <script>
         let populationData = [];
-        let originalHeaders = [];
-        let fileName = '';
-        let fileUploadTime = '';
+        let headers = [];
 
+        // Quick Start Guide
         function showQuickStart() {
             document.getElementById('modalBackdrop').style.display = 'block';
             document.getElementById('quickStartModal').style.display = 'block';
-            
-            // Animate steps
-            const steps = document.querySelectorAll('.quick-start-step');
-            steps.forEach((step, index) => {
-                setTimeout(() => {
-                    step.style.transform = 'translateX(4px)';
-                }, index * 100);
-            });
         }
 
-        document.getElementById('modalBackdrop').addEventListener('click', function() {
-            this.style.display = 'none';
+        function closeQuickStart() {
+            document.getElementById('modalBackdrop').style.display = 'none';
             document.getElementById('quickStartModal').style.display = 'none';
-            
-            // Reset step animations
-            document.querySelectorAll('.quick-start-step').forEach(step => {
-                step.style.transform = 'translateX(0)';
-            });
+        }
+
+        document.getElementById('modalBackdrop').addEventListener('click', closeQuickStart);
+
+        // File Upload Handling
+        const uploadZone = document.getElementById('uploadZone');
+        const fileInput = document.getElementById('fileInput');
+
+        uploadZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadZone.style.borderColor = 'var(--block-black)';
         });
 
-        function updateRequiredSamples() {
-            const frequency = document.getElementById('controlFrequency');
+        uploadZone.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            uploadZone.style.borderColor = 'var(--block-gray-200)';
+        });
+
+        uploadZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadZone.style.borderColor = 'var(--block-gray-200)';
+            
+            if (e.dataTransfer.files.length) {
+                handleFile(e.dataTransfer.files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length) {
+                handleFile(e.target.files[0]);
+            }
+        });
+
+        function handleFile(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, {type: 'array'});
+                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                    
+                    // Get headers
+                    const range = XLSX.utils.decode_range(firstSheet['!ref']);
+                    headers = [];
+                    for(let C = range.s.c; C <= range.e.c; ++C) {
+                        const cell = firstSheet[XLSX.utils.encode_cell({r:0, c:C})];
+                        headers.push(cell ? cell.v : `Column${C + 1}`);
+                    }
+                    
+                    // Get data
+                    populationData = XLSX.utils.sheet_to_json(firstSheet, { header: headers });
+                    populationData.shift(); // Remove header row
+                    
+                    // Update UI
+                    document.getElementById('fileName').textContent = file.name;
+                    document.getElementById('itemCount').textContent = populationData.length;
+                    document.getElementById('fileInfo').style.display = 'block';
+                    
+                } catch (error) {
+                    alert('Error processing file: ' + error.message);
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        // Sample Size Updates
+        function updateSampleCounts() {
+            const frequency = document.getElementById('frequency');
             const customInput = document.getElementById('customSampleSize');
-            const requiredCount = document.getElementById('requiredSamplesCount');
             
             customInput.style.display = frequency.value === 'custom' ? 'block' : 'none';
             
@@ -460,253 +585,120 @@
                 case 'custom': sampleSize = parseInt(customInput.value) || 1; break;
             }
             
-            requiredCount.textContent = sampleSize;
-            updateSampleSummary();
-        }
+            // Update both displays
+            document.getElementById('sampleSize').textContent = sampleSize;
+            document.getElementById('requiredCount').textContent = sampleSize;
 
-        function handleFileSelect(input) {
-            const file = input.files[0];
-            if (!file) return;
+            // Update replacement samples if needed
+            const hasReplacement = document.getElementById('replacementSamples').value === 'yes';
+            const replacementDiv = document.getElementById('replacementCount');
+            const replacementSize = hasReplacement ? parseInt(document.getElementById('replacementSize').value) : 0;
 
-            fileName = file.name;
-            fileUploadTime = new Date().toLocaleString();
-            document.getElementById('fileName').textContent = fileName;
-            document.getElementById('fileInfo').style.display = 'block';
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const data = new Uint8Array(e.target.result);
-                    const workbook = XLSX.read(data, {type: 'array'});
-                    
-                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-                    
-                    // Get headers first
-                    const range = XLSX.utils.decode_range(firstSheet['!ref']);
-                    originalHeaders = [];
-                    for(let C = range.s.c; C <= range.e.c; ++C) {
-                        const cell = firstSheet[XLSX.utils.encode_cell({r:0, c:C})];
-                        originalHeaders.push(cell ? cell.v : `Column${C + 1}`);
-                    }
-                    
-                    // Get data
-                    populationData = XLSX.utils.sheet_to_json(firstSheet, { header: originalHeaders });
-                    
-                    if (populationData.length <= 1) {
-                        throw new Error('No valid data found in the file');
-                    }
-
-                    // Remove header row from data
-                    populationData.shift();
-                    
-                    document.getElementById('populationInfo').style.display = 'block';
-                    document.getElementById('populationInfo').innerHTML = 
-                        `<i class="fas fa-check-circle me-2"></i>Population loaded: ${populationData.length} items`;
-
-                } catch (error) {
-                    alert('Error loading file: ' + error.message);
-                }
-            };
-            reader.readAsArrayBuffer(file);
-        }
-
-        function updateMethodologyInfo() {
-            const select = document.getElementById('selectionMethod');
-            const info = select.options[select.selectedIndex].getAttribute('data-info');
-            document.getElementById('methodologyInfo').textContent = info;
-        }
-
-        function toggleReplacementInput() {
-            const replacement = document.getElementById('replacementSamples');
-            const replacementInput = document.getElementById('replacementSamplesInput');
-            replacementInput.style.display = replacement.value === 'yes' ? 'block' : 'none';
-            updateSampleSummary();
-        }
-
-        function updateSampleSummary() {
-            const requiredSamples = parseInt(document.getElementById('requiredSamplesCount').textContent);
-            const replacementSamples = document.getElementById('replacementSamples').value === 'yes' ? 
-                parseInt(document.getElementById('replacementSampleSize').value) || 0 : 0;
+            replacementDiv.style.display = hasReplacement ? 'block' : 'none';
             
-            document.getElementById('summaryRequiredCount').textContent = requiredSamples;
-            document.getElementById('summaryReplacementCount').textContent = replacementSamples;
-            document.getElementById('totalSamplesCount').textContent = requiredSamples + replacementSamples;
-            document.getElementById('sampleSummary').style.display = 'block';
+            document.getElementById('replacementTotal').textContent = replacementSize;
+            document.getElementById('totalCount').textContent = sampleSize + replacementSize;
         }
 
         function generateSample() {
-            if (populationData.length === 0) {
-                alert('Please upload population data first');
+            if (!populationData.length) {
+                alert('Please upload a population file first');
                 return;
             }
 
-            const requiredSamples = parseInt(document.getElementById('requiredSamplesCount').textContent);
-            const replacementSamples = document.getElementById('replacementSamples').value === 'yes' ? 
-                parseInt(document.getElementById('replacementSampleSize').value) : 0;
-
-            // Create headers
-            const requiredHeader = document.getElementById('requiredSamplesHeader');
-            const replacementHeader = document.getElementById('replacementSamplesHeader');
+            const requiredSize = parseInt(document.getElementById('requiredCount').textContent);
+            const replacementSize = parseInt(document.getElementById('replacementTotal').textContent);
             
-            requiredHeader.innerHTML = '';
-            replacementHeader.innerHTML = '';
-            originalHeaders.forEach(header => {
-                requiredHeader.innerHTML += `<th>${header}</th>`;
-                replacementHeader.innerHTML += `<th>${header}</th>`;
-            });
-
-            // Generate samples
-            const allIndices = [...Array(populationData.length).keys()];
-            const selectedIndices = new Set();
-            const requiredIndices = [];
-            const replacementIndices = [];
-
-            // Select required samples
-            while (requiredIndices.length < requiredSamples && allIndices.length > 0) {
-                const randomIndex = Math.floor(Math.random() * allIndices.length);
-                const selectedIndex = allIndices[randomIndex];
-                allIndices.splice(randomIndex, 1);
-                requiredIndices.push(selectedIndex);
-                selectedIndices.add(selectedIndex);
+            if (requiredSize + replacementSize > populationData.length) {
+                alert('Total sample size cannot exceed population size');
+                return;
             }
 
-            // Select replacement samples
-            while (replacementIndices.length < replacementSamples && allIndices.length > 0) {
-                const randomIndex = Math.floor(Math.random() * allIndices.length);
-                const selectedIndex = allIndices[randomIndex];
-                allIndices.splice(randomIndex, 1);
-                replacementIndices.push(selectedIndex);
+            const indices = [...Array(populationData.length).keys()];
+            const selectedIndices = [];
+
+            // Select random indices
+            while (selectedIndices.length < (requiredSize + replacementSize) && indices.length > 0) {
+                const randomIndex = Math.floor(Math.random() * indices.length);
+                selectedIndices.push(indices[randomIndex]);
+                indices.splice(randomIndex, 1);
             }
 
             // Display results
-            const requiredBody = document.getElementById('requiredSamplesBody');
-            const replacementBody = document.getElementById('replacementSamplesBody');
+            const headerRow = document.getElementById('headerRow');
+            const resultBody = document.getElementById('resultBody');
             
-            requiredBody.innerHTML = '';
-            replacementBody.innerHTML = '';
+            headerRow.innerHTML = headers.map(h => `<th>${h}</th>`).join('');
+            resultBody.innerHTML = selectedIndices.map((index, i) => {
+                const row = populationData[index];
+                const isReplacement = i >= requiredSize;
+                return `
+                    <tr style="background: ${isReplacement ? 'var(--block-gray-50)' : 'transparent'}">
+                        ${headers.map(h => `<td>${row[h]}</td>`).join('')}
+                    </tr>
+                `;
+            }).join('');
 
-            // Display required samples
-            requiredIndices.forEach((index, i) => {
-                const row = document.createElement('tr');
-                originalHeaders.forEach(header => {
-                    row.innerHTML += `<td>${populationData[index][header]}</td>`;
-                });
-                requiredBody.appendChild(row);
-                
-                // Add fade-in animation
-                row.style.opacity = '0';
-                setTimeout(() => {
-                    row.style.opacity = '1';
-                    row.style.transition = 'opacity 0.2s ease';
-                }, i * 50);
-            });
-
-            // Display replacement samples if any
-            if (replacementSamples > 0) {
-                document.getElementById('replacementSamplesSection').style.display = 'block';
-                replacementIndices.forEach((index, i) => {
-                    const row = document.createElement('tr');
-                    originalHeaders.forEach(header => {
-                        row.innerHTML += `<td>${populationData[index][header]}</td>`;
-                    });
-                    replacementBody.appendChild(row);
-                    
-                    // Add fade-in animation
-                    row.style.opacity = '0';
-                    setTimeout(() => {
-                        row.style.opacity = '1';
-                        row.style.transition = 'opacity 0.2s ease';
-                    }, i * 50);
-                });
-            } else {
-                document.getElementById('replacementSamplesSection').style.display = 'none';
-            }
-
-            document.getElementById('sampleResults').style.display = 'block';
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
         }
 
-        function exportToExcel() {
-            if (!document.getElementById('requiredSamplesBody').rows.length) {
-                alert('Please generate a sample first');
+        function exportResults() {
+            if (!populationData.length) {
+                alert('No data to export');
                 return;
             }
 
             const wb = XLSX.utils.book_new();
-
-            // Create Required Samples sheet first
-            const required_ws = XLSX.utils.table_to_sheet(document.getElementById('requiredSamplesTable'));
-            XLSX.utils.book_append_sheet(wb, required_ws, 'Required Samples');
-
-            // Add Replacement Samples sheet if any
-            if (document.getElementById('replacementSamples').value === 'yes') {
-                const replacement_ws = XLSX.utils.table_to_sheet(document.getElementById('replacementSamplesTable'));
-                XLSX.utils.book_append_sheet(wb, replacement_ws, 'Replacement Samples');
-            }
-
-            // Create Audit Log sheet
+            const ws = XLSX.utils.table_to_sheet(document.querySelector('.results-table'));
+            
+            // Add metadata sheet
             const metadata = [
                 ['Sample Information'],
-                ['Control Frequency', document.getElementById('controlFrequency').value],
-                ['Required Sample Size', document.getElementById('requiredSamplesCount').textContent],
-                ['Replacement Sample Size', document.getElementById('replacementSamples').value === 'yes' ? 
-                    document.getElementById('replacementSampleSize').value : '0'],
-                ['Selection Method', document.getElementById('selectionMethod').value],
+                ['Control Frequency', document.getElementById('frequency').value],
+                ['Required Sample Size', document.getElementById('requiredCount').textContent],
+                ['Replacement Sample Size', document.getElementById('replacementTotal').textContent],
+                ['Total Sample Size', document.getElementById('totalCount').textContent],
                 [''],
                 ['Population Information'],
-                ['Original File', fileName],
-                ['Population Size', populationData.length],
-                ['Coverage', ((parseInt(document.getElementById('totalSamplesCount').textContent) / populationData.length) * 100).toFixed(2) + '%'],
-                ['File Upload Time', fileUploadTime],
+                ['Total Items', document.getElementById('itemCount').textContent],
+                ['Source File', document.getElementById('fileName').textContent],
                 [''],
                 ['Generation Details'],
-                ['Generated By', 'SFS Internal Audit Sampling Tool'],
                 ['Date/Time', new Date().toLocaleString()],
-                ['Tool Version', '1.0'],
-                [''],
-                ['Notes'],
-                ['Generated using the SFS Internal Audit Sampling Tool']
+                ['Method', 'Simple Random Sample']
             ];
-
-            const ws_metadata = XLSX.utils.aoa_to_sheet(metadata);
-            XLSX.utils.book_append_sheet(wb, ws_metadata, 'Audit Log');
-
+            
+            const ws_meta = XLSX.utils.aoa_to_sheet(metadata);
+            
+            XLSX.utils.book_append_sheet(wb, ws, 'Sample Results');
+            XLSX.utils.book_append_sheet(wb, ws_meta, 'Sample Information');
+            
             XLSX.writeFile(wb, 'audit_sample_results.xlsx');
         }
 
         function resetTool() {
-            if (confirm('Are you sure you want to reset all selections?')) {
-                document.getElementById('controlFrequency').value = 'annual';
-                document.getElementById('selectionMethod').value = 'simple';
+            if (confirm('Are you sure you want to reset all selections? This will clear all data.')) {
+                document.getElementById('frequency').value = 'daily';
                 document.getElementById('replacementSamples').value = 'no';
-                document.getElementById('customSampleSize').style.display = 'none';
-                document.getElementById('replacementSamplesInput').style.display = 'none';
-                document.getElementById('populationInfo').style.display = 'none';
-                document.getElementById('sampleResults').style.display = 'none';
-                document.getElementById('sampleSummary').style.display = 'none';
+                document.getElementById('fileInput').value = '';
                 document.getElementById('fileInfo').style.display = 'none';
-                document.getElementById('excelFile').value = '';
+                document.getElementById('results').style.display = 'none';
+                document.getElementById('replacementCount').style.display = 'none';
+                document.getElementById('replacementSize').value = '1';
+                document.getElementById('customSampleSize').style.display = 'none';
+                document.getElementById('customSampleSize').value = '1';
+                
                 populationData = [];
-                originalHeaders = [];
-                fileName = '';
-                updateMethodologyInfo();
-                updateRequiredSamples();
+                headers = [];
+                updateSampleCounts();
             }
         }
 
         // Initialize
-        document.getElementById('excelFile').addEventListener('change', function() {
-            handleFileSelect(this);
+        document.addEventListener('DOMContentLoaded', function() {
+            updateSampleCounts();
         });
-
-        // Add event listeners for dynamic updates
-        document.getElementById('replacementSampleSize').addEventListener('input', updateSampleSummary);
-        document.getElementById('controlFrequency').addEventListener('change', updateSampleSummary);
-        document.getElementById('customSampleSize').addEventListener('input', updateSampleSummary);
-        document.getElementById('replacementSamples').addEventListener('change', updateSampleSummary);
-
-        // Initialize on load
-        updateMethodologyInfo();
-        updateRequiredSamples();
     </script>
 </body>
 </html>
